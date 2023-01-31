@@ -17,7 +17,7 @@ def desobfuscate_js(obfuscated_code):
     x = list(set(x))
     x = sorted(x, key=lambda el:len(el))
     x.reverse()
-    #print(obfuscated_code)
+
 
     #renaming var and function
     noVar = 1
@@ -28,22 +28,17 @@ def desobfuscate_js(obfuscated_code):
             noFct +=1
         else:
             obfuscated_code=re.sub("_*0x"+var,"var"+str(noVar),obfuscated_code)
-            noVar +=1
+            noVar +=1            
     
     #calculating remaining hexa values
-    #re.findall("\( *0x[0-9|a-f]+ *[\+|\-|]\)")
-    #oui=re.findall("\( ?[+-]? ?0x[0-9|a-f]+ ?[?[\+\-\/\*] ?[+-]? ?0x[0-9|a-f]+ ?]* ?\)",obfuscated_code)
-    oui=re.findall("\( ?[+-]? ?0x[0-9|a-f]+ ?[[+-/\*]? ?[+-]? ?0x[0-9|a-f]+ ?]{0,5}",obfuscated_code)
-    print(oui)
+    listCalculHex=re.findall("([+-]?0x[0-9|a-f]+( ?[+-/\*] ?[+-]?0x[0-9|a-f]+)*)",obfuscated_code)
+    for calcul in listCalculHex:
+        print(calcul[0]," = ",eval(calcul[0]))
+        obfuscated_code = obfuscated_code.replace(calcul[0],str(eval(calcul[0])))
 
-    ## attention certaine var usee une seule fois -> calucl aussi?
+    ## attention certaine var usee une seule fois -> calucl aussi? pas tout de suite au moins
 
-
-
-    #x = re.sub("function _*0x([0-9|a-f]+)","function fct_\g<1>",obfuscated_code)
-    #x = re.sub("_*0x([0-9|a-f]+)( *= *function\(\))","fct_\g<1>\g<2>",obfuscated_code)
-    #a = "35e8c8"
-    #print(bytes.fromhex(a).decode('utf-8'))
+    #obfuscated_code = re.sub("\((\d+)\)[^;]","\g<1>",obfuscated_code)
     return obfuscated_code 
 
 
